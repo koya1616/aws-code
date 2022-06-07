@@ -1,0 +1,41 @@
+# p136~p137
+Parameters:
+  KeyName:
+    Description: "Key Pair name"
+    Type: "AWS::EC2::KeyPair::KeyName"  # キーペアのみ指定可能
+  NumberOfVirtualMachine:
+    Description: "How many virtual machine do you like?"
+    Type: Number
+    Default: 1                          # デフォルトで仮想マシンは１つ
+    MinValue: 1
+    MaxValue: 5                         # 上限を設けることでコストを節約
+  WordPressVersion:
+    Description: "Which version of WordPress do you want?"
+    Type: String
+    AllowedValues: ['4.1.1', '4.0.1']
+
+Resources:
+  VM:
+    Type: "AWS::EC2::Instance"          # 選択可能なリソースの名前またはID
+    Properties:                         # EC2インスタンスを定義
+      ImageId: "ami-6057e21a"           # コードに埋め込まれた設定
+      InstanceType: "t2.micro"
+      KeyName: mykey
+      # https://qiita.com/shonansurvivors/items/dc32e29fbb02cafdea17#35-%E3%83%91%E3%83%96%E3%83%AA%E3%83%83%E3%82%AF%E3%82%B5%E3%83%BC%E3%83%90%E3%83%BC%E3%81%AE%E5%AE%9A%E7%BE%A9
+      NetworkInterfaces:
+        - AssociatePublicIpAddress: true # 自動割り当てパブリックIPの有効化
+      DeleteOnTermination: true
+      DeviceIndex: 0
+      GroupSet:
+        - "sg-123456"
+      SubnetId: "subnet-123456"
+
+OutPuts:
+  ID: 
+    Value: !Ref Sever                              # EC2インスタンスを参照
+    Description: "Id of the ec2 instance"
+  PublicName:
+    Value: !GetAtt 'Server.PublicName'             # EC2インスタンス
+    Description: "Public name of the Ec2 instance" # PublicDnsName属性を取得
+
+

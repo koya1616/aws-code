@@ -1,0 +1,39 @@
+# p139
+AWSTemplateFormatVersion: '2010-09-09'
+
+Description: 'AWS in Action: p139'
+
+Parameters:
+  KeyName:                                   # 使用するキーを定義
+    Description: "Key Pair name"
+    Type: "AWS::EC2::KeyPair::KeyName"
+    Default: mykey
+
+  VPC:
+
+  Subnet:
+
+  InstanceType:                               # インスタンスタイプを定義
+    Description: 'Select one of the possible instance types'
+    Type: String
+    Default: 't2.micro'
+    AllowedValues: ['t2.micro', 't2.small', 't2.medium']
+
+Resources:
+  SecurityGroup:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+
+  VM:                                         # 必要最低限のEC2インスタンスを定義
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      ImageId: 'ami-6057e21a'
+      InstanceType: !Ref InstanceType
+      KeyName: !Ref KeyName
+      NetworkInterfaces:
+       - AssociatePublicIpAddress: true
+      DeleteOnTermination: true
+      DeviceIndex: 0
+      GroupSet:
+       - !Ref SecurityGroup
+      SubnetId: !Ref Subnet
